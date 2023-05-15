@@ -1,0 +1,96 @@
+class item:
+    def __init__(self,name,price):
+        self.name = name
+        self.price = price
+
+class food(item):
+    def __init__(self, name, price):
+        super().__init__(name, price)
+
+class drinks(item):
+    def __init__(self, name,type, size, price):
+        super().__init__(name, price)
+        self.type=type
+        self.size=size
+
+class Menu:
+    def __init__(self):
+        self.foodmenu = []
+        self.drinksmenu= []
+    def add_item(self, item):
+        if(isinstance(item,food)):
+            self.foodmenu.append(item)
+        else:
+            self.drinksmenu.append(item)
+
+
+    def remove_item(self, item):
+        if (isinstance(item, food)):
+            self.foodmenu.remove(item)
+        else:
+            self.drinksmenu.remove(item)
+
+
+    def display_menu(self):
+        with open("menu", "w") as file:
+            file.write("Menu:\n")
+            file.write("FOOD:\n")
+            for item in self.foodmenu:
+                file.write(item.name + "\n")
+            file.write("drinks:\n")
+            for item in self.drinksmenu:
+                file.write(item.name + "\n")
+    def get_item_by_name(self, name):
+
+            for item in self.foodmenu:
+                if item.name.lower() == name.lower():
+                    return item
+            for item in self.drinksmenu:
+                if item.name.lower() == name.lower():
+                    return item
+            return None
+
+class Order:
+    def __init__(self):
+        self.items = []
+
+    def add_item(self, item, quantity):
+        self.items.append((item, quantity))
+
+    def remove_item(self, item, quantity):
+        self.items.remove((item, quantity))
+
+    def calculate_total(self):
+        total = 0
+        for item, quantity in self.items:
+            total += item.price * quantity
+        return total
+
+    def display_order(self):
+        print("Order:")
+        for item, quantity in self.items:
+            print(f"{item.name} --> {quantity}")
+        print("Total:", self.calculate_total())
+
+
+
+
+menu = Menu()
+
+# Add items to menu manually
+menu.add_item(food("Burger", 5.99))
+menu.add_item(drinks("Coke", "cold",1.99, 12))
+menu.add_item(food("Pizza", 9.99))
+
+# Displaying the menu
+menu.display_menu()
+
+# Creating an order
+order = Order()
+
+# Add items to order manually
+order.add_item(menu.get_item_by_name("Burger"), 2)
+order.add_item(menu.get_item_by_name("Coke"), 1)
+
+# Displaying the order
+order.display_order()
